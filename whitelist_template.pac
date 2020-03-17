@@ -5,6 +5,11 @@
  * More informations: https://github.com/wspl/CIDR2PAC
  */
 
+var Methods = {
+ Direct: 'DIRECT',
+ Proxy: '{#proxy}'
+}
+
 var ipRepo = [{#ipRepo}];
 
 function ipToLong(ip) {
@@ -36,26 +41,26 @@ function isInside(host) {
   while (1) {
     if (testIpLong <= leftLong) {
       endRange = leftPot;
-      
+
       var leftMin = ipRepo[leftPot][0];
       var leftMax = ipRepo[leftPot][1];
       if (testIpLong >= leftMin && testIpLong <= leftMax) {
         return true;
       }
-      
+
       leftPot = parseInt((startRange + endRange) / 2);
       rightPot = leftPot + 1;
       leftLong = ipRepo[leftPot][1];
       rightLong = ipRepo[rightPot][0];
     } else if (testIpLong >= rightLong) {
       startRange = rightPot;
-      
+
       var rightMin = ipRepo[rightPot][0];
       var rightMax = ipRepo[rightPot][1];
       if (testIpLong >= rightMin && testIpLong <= rightMax) {
         return true;
       }
-      
+
       leftPot = parseInt((startRange + endRange) / 2);
       rightPot = leftPot + 1;
       leftLong = ipRepo[leftPot][1];
@@ -68,8 +73,8 @@ function isInside(host) {
 
 function FindProxyForURL(url, host) {
   if (isInside(host)) {
-    return 'DIRECT';
+    return Methods.Direct;
   } else {
-    return '{#proxy}';
+    return Methods.Proxy;
   }
 }

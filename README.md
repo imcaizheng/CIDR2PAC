@@ -19,6 +19,7 @@ http://www.ipdeny.com/ipblocks/data/aggregated/cn-aggregated.zone
 git clone https://github.com/wspl/CIDR2PAC.git
 cd ./CIDR2PAC
 npm install
+# export PROXY='PROXY 192.168.1.1:1081'
 node ./
 
 # 然后就可以在 DIST_PAC_PATH 找到你的 PAC 文件。

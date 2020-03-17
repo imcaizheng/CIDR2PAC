@@ -5,7 +5,7 @@ const package = require('./package.json')
 const CIDR_PATH = './cn-aggregated.zone.txt';
 const TEMPLATE_PAC_PATH = './whitelist_template.pac';
 const DIST_PAC_PATH = './whitelist.pac';
-const PROXY = 'SOCKS5 localhost:1080';
+const PROXY = process.env.PROXY || 'PROXY 192.168.1.1:1081';
 
 const cidrsFile = fs.readFileSync(CIDR_PATH);
 const cidrs = cidrsFile.toString().split(/\n|\r\n/);
@@ -22,7 +22,7 @@ const addCIDR = cidr => {
 
     const ipLongStart = ip.toLong(ipStrStart);
     const ipLongEnd = ip.toLong(ipStrEnd);
-    
+
     ipRepo.push([ipLongStart, ipLongEnd]);
   }
 };
@@ -44,7 +44,7 @@ test('46.82.174.68') // Hongkong Google
 function test(testIp) {
   console.log('\ntesting: ' + testIp);
   var testIpLong = ip.toLong(testIp);
-  
+
   var startRange = 0;
   var endRange = ipRepo.length;
 
@@ -57,7 +57,7 @@ function test(testIp) {
   while (1) {
     if (testIpLong <= leftLong) {
       endRange = leftPot;
-      
+
       var leftMin = ipRepo[leftPot][0];
       var leftMax = ipRepo[leftPot][1];
       console.log('- left of: ', leftPot);
@@ -65,14 +65,14 @@ function test(testIp) {
         console.log(`+ match ${testIpLong} between ${leftMin}, ${leftMax} of index-${leftPot}`);
         break;
       }
-      
+
       leftPot = parseInt((startRange + endRange) / 2);
       rightPot = leftPot + 1;
       leftLong = ipRepo[leftPot][1];
       rightLong = ipRepo[rightPot][0];
     } else if (testIpLong >= rightLong) {
       startRange = rightPot;
-      
+
       var rightMin = ipRepo[rightPot][0];
       var rightMax = ipRepo[rightPot][1];
       console.log('- right of: ', rightPot);
@@ -80,7 +80,7 @@ function test(testIp) {
         console.log(`+ match ${testIpLong} between ${rightMin}, ${rightMax} of index-${rightPot}`);
         break;
       }
-      
+
       leftPot = parseInt((startRange + endRange) / 2);
       rightPot = leftPot + 1;
       leftLong = ipRepo[leftPot][1];
